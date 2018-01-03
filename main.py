@@ -89,6 +89,7 @@ class Main():
         elif not deviceId in self.playerIds:    # Add to players
             self.players.append("Player " + str(len(self.players) + 1))
             self.playerIds.append(deviceId)
+            self.mainWin.set_image(player_overview(self.players))
 
     def handle_question_overview(self, buttonPressed, deviceId):
         if deviceId == self.adminId:
