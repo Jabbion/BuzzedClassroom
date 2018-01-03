@@ -1,3 +1,6 @@
+import csv
+import datetime
+
 from time import sleep
 
 from Database.database import database
@@ -126,13 +129,50 @@ class Main():
             self.timerThread.run(self.timePerQuestion, onEnd=self.next_question)
 
         else:
-            # TODO: Add CSV stuff   (self.quizAnswers)
+            self.dump_csv()
             self.currentQuiz = 0
             self.mainWin.set_image(quizzes_overview(self.allQuizzes, self.currentQuiz))
             unsubscribe(self.handle_question_overview)
             subscribe(self.handle_quizzes_overview)
 
         self.blockController = False
+
+    def dump_csv(self):
+        with open(str(datetime.datetime.now()) + '.csv', 'w', newline='') as csvfile:
+            csvwriter = csv.writer(csvfile, delimiter=' ',
+                                    quotechar='|', quoting=csv.QUOTE_MINIMAL)
+
+            # Write top row
+            firstRow = ["Questions", "A", "B", "C", "D", "N/A", "Correct Answer"]
+            csvwriter.writerow(firstRow)
+
+            # Write every question
+            for i, answers in enumerate(self.quizAnswers):
+                row = [str(i + 1) + ".) " + self.questions[i].question]
+                counts = [0 for x in range(5)]
+
+                for answer in answers:
+                    num = self.answer_char_to_num(answer)
+
+                    if num == None:
+                        counts[4] += 1
+                    else:
+                        counts[num] += 1
+
+                for count in counts:
+                    row.append(count)
+
+                row.append(self.answer_num_to_char(self.questions[i].rightAnswer))
+
+                csvwriter.writerow(row)
+
+    def answer_char_to_num(self, char):
+        if char != None:
+            return ord(char) - 65
+        return None
+
+    def answer_num_to_char(self, num):
+        return chr(num + 65)
 
     def has_everyone_answered(self):
         for el in self.playerAnswers:
