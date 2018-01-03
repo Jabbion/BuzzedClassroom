@@ -18,7 +18,6 @@ def in_key_mapping(key:int):
 def main():
     selector = DefaultSelector()
     devices = [InputDevice(fn) for fn in list_devices()]
-    devs = []
     for device in devices:
         print(device.fn, device.name, device.phys)
         if device.name == "VR-PARK":
