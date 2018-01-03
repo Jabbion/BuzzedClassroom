@@ -18,30 +18,30 @@ class Quiz:
         self.question = response["question"]
 
 
-def question_overview(quiz, selected = "", win = "", current = "", total = ""):
-    #hier kann böser Exploit sein!                                         ----------
+def question_overview(question, questionIndex ="", maxQuestions ="", selected ="", win =""):
+    # hier kann böser Exploit sein!                                         ----------
     if(selected == "3"):
         selected = "2"
     elif selected == "2":
         selected = "3"
     temp_display = MainWindows.get_new_background('images/background'+str(selected)+str(win)+'.png')
-    text_box(str(current) + "/" + str(total), 300 - 50, 30, 100, 100, temp_display, font_size=100)
+    text_box(str(questionIndex) + "/" + str(maxQuestions), 300 - 50, 30, 100, 100, temp_display, font_size=100)
     font = 50
-    if(len(quiz.answer0) > 50):
+    if(len(question.answer0) > 50):
         font = 50
-    text_box(quiz.answer0, 400 - 50, 584 - 50, 100, 100, temp_display, font_size=font)
+    text_box(question.answer0, 400 - 50, 584 - 50, 100, 100, temp_display, font_size=font)
     font = 50
-    if(len(quiz.answer0) > 50):
+    if(len(question.answer0) > 50):
         font = 50
-    text_box(quiz.answer1, 1200 - 50, 584 - 50, 100, 100, temp_display, font_size=font)
+    text_box(question.answer1, 1200 - 50, 584 - 50, 100, 100, temp_display, font_size=font)
     font = 50
-    if(len(quiz.answer0) > 50):
+    if(len(question.answer0) > 50):
         font = 50
-    text_box(quiz.answer3, 400 - 50, 784 - 50, 100, 100, temp_display, font_size=font)
+    text_box(question.answer3, 400 - 50, 784 - 50, 100, 100, temp_display, font_size=font)
 
     font = 50
-    if(len(quiz.answer0) > 50):
+    if(len(question.answer0) > 50):
         font = 50
-    text_box(quiz.answer2, 1200 - 50, 784 - 50, 100, 100, temp_display, font_size=font)
-    text_box(quiz.question, 800 - 50, 309 - 50, 100, 100, temp_display, font_size=50)
+    text_box(question.answer2, 1200 - 50, 784 - 50, 100, 100, temp_display, font_size=font)
+    text_box(question.question, 800 - 50, 309 - 50, 100, 100, temp_display, font_size=50)
     return temp_display

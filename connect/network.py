@@ -37,16 +37,16 @@ class Network(object):
             q.contentFromJson(response)
 
             if response["isCorrect"] == True:
-                img = question_overview(self.old_question, response["selectedAnswer"], "g", current=response["currentQuestionNum"], total=response["countQuestions"])
+                img = question_overview(self.old_question, response["selectedAnswer"], "g", questionIndex=response["currentQuestionNum"], maxQuestions=response["countQuestions"])
                 self.main.set_image(img)
                 time.sleep(3)
 
             elif response["isCorrect"] == False:
-                img = question_overview(self.old_question, response["selectedAnswer"], "l", current=response["currentQuestionNum"], total=response["countQuestions"])
+                img = question_overview(self.old_question, response["selectedAnswer"], "l", questionIndex=response["currentQuestionNum"], maxQuestions=response["countQuestions"])
                 self.main.set_image(img)
                 time.sleep(3)
 
-            img = question_overview(q, current=response["currentQuestionNum"], total=response["countQuestions"])
+            img = question_overview(q, questionIndex=response["currentQuestionNum"], maxQuestions=response["countQuestions"])
             self.old_question = q
 
         if response["windowName"] == "WinnerOverview":

@@ -2,10 +2,10 @@ from evdev import InputDevice, list_devices, categorize, ecodes
 from selectors import DefaultSelector, EVENT_READ
 
 key_mapping = {
-    115:"up",
-    114:"down",
-    272:"right",
-    1:"left"
+    115:"C",    # Up
+    114:"D",    # Down
+    272:"A",    # Right     # Okay
+    1:"B"       # Left      # Back
                 }
 subscriber = []
 def main():
@@ -33,7 +33,7 @@ def subscribe(method):
     global subscriber
     subscriber.append(method)
 
-def desubscribe(method):
+def unsubscribe(method):
     global subscriber
     subscriber.remove(method)
 
