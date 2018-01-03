@@ -33,7 +33,7 @@ def main():
                 if event.type == ecodes.EV_KEY:
                     if categorize(event).keystate == 1 and not in_key_mapping(event.code):
                         for m in subscriber:
-                            print("Event geschmießen")
+                            print("Event geschmissen")
                             m(event.code, key.fd)
 
 
