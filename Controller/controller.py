@@ -10,7 +10,7 @@ key_mapping = {
 subscriber = []
 
 def in_key_mapping(key:int):
-    for i in key_mapping:
+    for i in [115,114,272,1]:
         if i == key:
             return True
     return False
@@ -31,7 +31,8 @@ def main():
             device = key.fileobj
             for event in device.read():
                 if event.type == ecodes.EV_KEY:
-                    if categorize(event).keystate == 1 and not in_key_mapping(event.code):
+                    cat = categorize(event)
+                    if cat.keystate == 1 and in_key_mapping(event.code):
                         for m in subscriber:
                             print("Event geschmissen")
                             m(event.code, key.fd)
