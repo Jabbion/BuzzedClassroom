@@ -156,9 +156,14 @@ class Main():
         corAnswer.set_bg_color("green")
 
         # Write top row
-        firstRow = ["Questions", "A", "B", "C", "D", "N/A", "Correct Answer"]
+        firstRow = ["Questions", "A", "B", "C", "D", "N/A", "", "Answers:", "A", "B", "C", "D"]
 
         ws.write_row(0, 0, firstRow, bold)
+
+        # Set line length
+        ws.set_column('A:A', 40)
+        ws.set_column('B:F', 3)
+        ws.set_column('H:K', 30)
 
         # Write every question
         for i, answers in enumerate(self.quizAnswers):
@@ -181,7 +186,14 @@ class Main():
                 else:
                     ws.write(i + 1, 1 + answIndex, count)
 
-            ws.write(i + 1, 6, self.answer_num_to_char(self.questions[i].rightAnswer))
+            # Empty column
+            ws.write(i + 1, 7, "")
+
+            # Answers
+            ws.write(i + 1, 8, self.questions[i].answer0)
+            ws.write(i + 1, 9, self.questions[i].answer1)
+            ws.write(i + 1, 10, self.questions[i].answer2)
+            ws.write(i + 1, 11, self.questions[i].answer3)
 
     def answer_char_to_num(self, char):
         if char != None:
