@@ -19,7 +19,7 @@ class Quiz:
         self.rightAnswer = answers["rightAnswer"]
 
 
-def question_overview(question, questionIndex ="", maxQuestions ="", selected ="", win =""):
+def question_overview(question, questionIndex ="", maxQuestions ="", selected ="", win ="", font_question = 50):
     # hier kann böser Exploit sein!                                         ----------
     if(selected == "3"):
         selected = "2"
@@ -32,7 +32,8 @@ def question_overview(question, questionIndex ="", maxQuestions ="", selected ="
         swin = "l"
 
     temp_display = MainWindows.get_new_background('images/background'+str(selected)+str(swin)+'.png')
-    text_box(str(questionIndex) + "/" + str(maxQuestions), 300 - 50, 30, 100, 100, temp_display, font_size=100)
+    if questionIndex != "" and maxQuestions != "":
+        text_box(str(questionIndex) + "/" + str(maxQuestions), 300 - 50, 30, 100, 100, temp_display, font_size=100)
     font = 50
     if(len(question.answer0) > 50):
         font = 50
@@ -50,5 +51,5 @@ def question_overview(question, questionIndex ="", maxQuestions ="", selected ="
     if(len(question.answer0) > 50):
         font = 50
     text_box(question.answer2, 1200 - 50, 784 - 50, 100, 100, temp_display, font_size=font)
-    text_box(question.question, 800 - 50, 309 - 50, 100, 100, temp_display, font_size=50)
+    text_box(question.question, 800 - 50, 309 - 50, 100, 100, temp_display, font_size=font_question)
     return temp_display
