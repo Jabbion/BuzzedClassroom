@@ -107,11 +107,11 @@ class Main():
                 self.playerAnswers[self.playerIds.index(deviceId)] = keys[buttonPressed]
 
         if self.has_everyone_answered():
-            self.timerThread.enable(False)
             self.next_question()
 
     def next_question(self):
         self.blockController = True
+        self.timerThread.enable(False)
 
         self.quizAnswers.append(self.playerAnswers[:])
         self.clear_player_answers()
@@ -142,7 +142,8 @@ class Main():
         ws = workbook.add_worksheet()
 
         bold = workbook.add_format({'bold': True})
-        corAnswer = workbook.add_format()
+
+        corAnswer = workbook.add_format({'bold': True})
         corAnswer.set_bg_color("green")
 
         # Write top row
