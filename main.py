@@ -175,6 +175,7 @@ class Main():
         # Set line length
         ws.set_column('A:A', 40)
         ws.set_column('B:F', 3)
+        ws.set_column('H:H', 11)
         ws.set_column('I:L', 30)
 
         # Write every question
