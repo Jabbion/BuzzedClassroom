@@ -27,7 +27,7 @@ class Main():
     def __init__(self):
         self.jdb = database()
 
-        # Prepare Quiz
+        # Prepare Quiz Preview
         self.quizPreviewQuestion = Quiz()
         self.quizPreviewQuestion.question = "-= Unnamed =-"
         self.quizPreviewQuestion.answer0 = "A"
