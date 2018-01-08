@@ -19,6 +19,7 @@ class Main():
     # <Settings>
     timePerQuestion = 10
     timeShowRightAnswer = 2
+    csvDelimiter = ';'
     # </Settings>
 
     currentQuiz = 0
@@ -139,7 +140,7 @@ class Main():
 
     def dump_csv(self):
         with open(str(datetime.datetime.now()) + '.csv', 'w', newline='') as csvfile:
-            csvwriter = csv.writer(csvfile, delimiter=' ',
+            csvwriter = csv.writer(csvfile, delimiter=self.csvDelimiter,
                                     quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
             # Write top row
