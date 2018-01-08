@@ -1,4 +1,5 @@
 import json
+from guiElements.question_overview import Quiz
 
 class database():
 
@@ -18,4 +19,7 @@ class database():
         quiz = self.d["QuizDict"][name]
         questions = []
         for i in quiz:
-            questions.append(self.q["questionDir"][str(i)])
+            qu = Quiz()
+            qu.contentFromJson(self.q["questionDir"][str(i)])
+            questions.append(qu)
+        return questions

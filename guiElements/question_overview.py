@@ -9,13 +9,14 @@ class Quiz:
     answer3 = ""
     question = ""
 
-    def contentFromJson(self, response):
-        answers = response["answers"]
-        self.answer0 = answers[0]
-        self.answer1 = answers[1]
-        self.answer2 = answers[2]
-        self.answer3 = answers[3]
-        self.question = response["question"]
+    def contentFromJson(self, answers):
+        pass
+        self.answer0 = answers["answer0"]
+        self.answer1 = answers["answer1"]
+        self.answer2 = answers["answer2"]
+        self.answer3 = answers["answer3"]
+        self.question = answers["question"]
+        self.rightAnswer = answers["rightAnswer"]
 
 
 def question_overview(question, questionIndex ="", maxQuestions ="", selected ="", win =""):
@@ -24,7 +25,13 @@ def question_overview(question, questionIndex ="", maxQuestions ="", selected ="
         selected = "2"
     elif selected == "2":
         selected = "3"
-    temp_display = MainWindows.get_new_background('images/background'+str(selected)+str(win)+'.png')
+    swin = ""
+    if win == True:
+        swin = "g"
+    elif win == False:
+        swin = "l"
+
+    temp_display = MainWindows.get_new_background('images/background'+str(selected)+str(swin)+'.png')
     text_box(str(questionIndex) + "/" + str(maxQuestions), 300 - 50, 30, 100, 100, temp_display, font_size=100)
     font = 50
     if(len(question.answer0) > 50):
