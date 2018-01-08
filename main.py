@@ -154,7 +154,7 @@ class Main():
         # Set line length
         ws.set_column('A:A', 40)
         ws.set_column('B:F', 3)
-        ws.set_column('H:K', 30)
+        ws.set_column('I:L', 30)
 
         # Write every question
         for i, answers in enumerate(self.quizAnswers):
