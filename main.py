@@ -126,7 +126,7 @@ class Main():
     def show_quiz_preview(self):
         self.blockController = True
         self.quizPreviewQuestion.question = self.allQuizzes[self.currentQuiz]
-        self.mainWin.set_image(question_overview(q, font_question=150))
+        self.mainWin.set_image(question_overview(self.quizPreviewQuestion, font_question=150))
         sleep(self.timeQuizPreview)
         self.blockController = False
 
