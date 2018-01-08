@@ -167,9 +167,9 @@ class Main():
 
             for answIndex, count in enumerate(counts):
                 if self.questions[i].rightAnswer == answIndex:
-                    ws.write(i + 1, 1 + i, count, corAnswer)
+                    ws.write(i + 1, 1 + answIndex, count, corAnswer)
                 else:
-                    ws.write(i + 1, 1 + i, count)
+                    ws.write(i + 1, 1 + answIndex, count)
 
             ws.write(i + 1, 6, self.answer_num_to_char(self.questions[i].rightAnswer))
 
