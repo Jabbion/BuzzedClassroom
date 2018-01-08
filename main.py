@@ -27,7 +27,7 @@ class Main():
         self.jdb = database()
 
         # Quiz Overview
-        self.mainWin = MainWindows(1280, 1024)
+        self.mainWin = MainWindows(1280, 1024, fullscreen=True)
         self.allQuizzes = self.jdb.getQuizNames()
         self.mainWin.set_image(quizzes_overview(self.allQuizzes, self.currentQuiz))
 

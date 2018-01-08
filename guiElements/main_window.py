@@ -13,13 +13,19 @@ class MainWindows():
     sock = None
 
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, fullscreen = False):
         #self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         #self.sock.connect((self.HOST, self.PORT))
         pygame.init()
-        self.gameDisplay = pygame.display.set_mode((width, height))
-        self.width = width
-        self.height = height
+        if fullscreen:
+            infoObject = pygame.display.Info()
+            self.gameDisplay = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
+            self.width = infoObject.current_w
+            self.height = infoObject.current_h
+        else:
+            self.gameDisplay = pygame.display.set_mode((width, height))
+            self.width = width
+            self.height = height
 
     @staticmethod
     def get_new_background(path):
