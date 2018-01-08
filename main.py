@@ -19,7 +19,6 @@ class Main():
     # <Settings>
     timePerQuestion = 10
     timeShowRightAnswer = 2
-    csvDelimiter = ';'
     # </Settings>
 
     currentQuiz = 0
