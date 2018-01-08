@@ -117,7 +117,7 @@ class Main():
         self.clear_player_answers()
         self.mainWin.set_image(
             question_overview(self.questions[self.curQuestion], self.curQuestion + 1, len(self.questions),
-                              self.questions[self.curQuestion].rightAnswer, True))
+                              self.questions[self.curQuestion].rightAnswer))
         sleep(self.timeShowRightAnswer)
 
         self.curQuestion += 1
