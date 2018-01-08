@@ -142,14 +142,18 @@ class Main():
         workbook = xlsxwriter.Workbook(str(datetime.datetime.now()) + ".xlsx")
         ws = workbook.add_worksheet()
 
+        bold = workbook.add_format({'bold': True})
+        corAnswer = workbook.add_format()
+        corAnswer.set_bg_color("green")
+
         # Write top row
         firstRow = ["Questions", "A", "B", "C", "D", "N/A", "Correct Answer"]
 
-        ws.write_row(0, 0, firstRow)
+        ws.write_row(0, 0, firstRow, bold)
 
         # Write every question
         for i, answers in enumerate(self.quizAnswers):
-            ws.write(i + 1, 0, str(i + 1) + ".) " + self.questions[i].question)
+            ws.write(i + 1, 0, str(i + 1) + ".) " + self.questions[i].question, bold)
 
             # Calculate counts
             counts = [0 for x in range(5)]
@@ -162,7 +166,11 @@ class Main():
                 else:
                     counts[num] += 1
 
-            ws.write_row(i + 1, 1, counts)
+            for answIndex, count in enumerate(counts):
+                if self.questions[i].rightAnswer == answIndex:
+                    ws.write(i + 1, 1 + i, count, corAnswer)
+                else:
+                    ws.write(i + 1, 1 + i, count)
 
             ws.write(i + 1, 6, self.answer_num_to_char(self.questions[i].rightAnswer))
 
