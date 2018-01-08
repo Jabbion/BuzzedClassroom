@@ -19,12 +19,22 @@ class Main():
     # <Settings>
     timePerQuestion = 10
     timeShowRightAnswer = 2
+    timeQuizPreview = 5
     # </Settings>
 
     currentQuiz = 0
 
     def __init__(self):
         self.jdb = database()
+
+        # Prepare Quiz
+        self.quizPreviewQuestion = Quiz()
+        self.quizPreviewQuestion.question = "-= Unnamed =-"
+        self.quizPreviewQuestion.answer0 = "A"
+        self.quizPreviewQuestion.answer1 = "B"
+        self.quizPreviewQuestion.answer2 = "C"
+        self.quizPreviewQuestion.answer3 = "D"
+        self.quizPreviewQuestion.rightAnswer = 88
 
         # Quiz Overview
         self.mainWin = MainWindows(1280, 1024)
@@ -59,6 +69,7 @@ class Main():
 
             if keys[buttonPressed] == "A":      # Run Quiz
                 if len(self.allQuizzes) - 1 != 0:
+                    self.blockController = False
                     self.players = []
                     self.playerIds = []
                     self.mainWin.set_image(player_overview(self.players))
@@ -73,16 +84,9 @@ class Main():
     def handle_player_overview(self, buttonPressed, deviceId):
         if deviceId == self.adminId:
             if keys[buttonPressed] == "A":      # Start Quiz
+                self.show_quiz_preview()
+
                 self.questions = self.jdb.getQuiz(self.allQuizzes[self.currentQuiz])
-                q = Quiz()
-                q.question = self.allQuizzes[self.currentQuiz]
-                q.answer0 = "A"
-                q.answer1 = "B"
-                q.answer2 = "C"
-                q.answer3 = "D"
-                q.rightAnswer = ""
-                self.mainWin.set_image(question_overview(q,font_question=150))
-                sleep(5)
                 self.curQuestion = 0
                 self.clear_player_answers()
                 self.quizAnswers = []
@@ -98,7 +102,7 @@ class Main():
                 unsubscribe(self.handle_player_overview)
                 subscribe(self.handle_quizzes_overview)
 
-        elif not deviceId in self.playerIds:    # Add to players
+        elif not deviceId in self.playerIds and self.blockController == False:    # Add to players
             self.players.append("Player " + str(len(self.players) + 1))
             self.playerIds.append(deviceId)
             self.mainWin.set_image(player_overview(self.players))
@@ -106,6 +110,7 @@ class Main():
     def handle_question_overview(self, buttonPressed, deviceId):
         if deviceId == self.adminId:
             if keys[buttonPressed] == "B":  # Back to Player Overview
+                self.blockController = False
                 self.mainWin.set_image(player_overview(self.players))
                 unsubscribe(self.handle_question_overview)
                 subscribe(self.handle_player_overview)
@@ -117,6 +122,13 @@ class Main():
 
         if self.has_everyone_answered():
             self.next_question()
+
+    def show_quiz_preview(self):
+        self.blockController = True
+        self.quizPreviewQuestion.question = self.allQuizzes[self.currentQuiz]
+        self.mainWin.set_image(question_overview(q, font_question=150))
+        sleep(self.timeQuizPreview)
+        self.blockController = False
 
     def next_question(self):
         self.blockController = True
