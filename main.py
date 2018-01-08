@@ -4,7 +4,7 @@ import datetime
 from time import sleep
 
 from Database.database import database
-from guiElements.question_overview import question_overview
+from guiElements.question_overview import question_overview, Quiz
 from guiElements.quizzes_overview import quizzes_overview
 from guiElements.player_overview import player_overview
 from guiElements.main_window import MainWindows
@@ -27,7 +27,7 @@ class Main():
         self.jdb = database()
 
         # Quiz Overview
-        self.mainWin = MainWindows(1280, 1024, fullscreen=True)
+        self.mainWin = MainWindows(1280, 1024)
         self.allQuizzes = self.jdb.getQuizNames()
         self.mainWin.set_image(quizzes_overview(self.allQuizzes, self.currentQuiz))
 
@@ -74,6 +74,15 @@ class Main():
         if deviceId == self.adminId:
             if keys[buttonPressed] == "A":      # Start Quiz
                 self.questions = self.jdb.getQuiz(self.allQuizzes[self.currentQuiz])
+                q = Quiz()
+                q.question = self.allQuizzes[self.currentQuiz]
+                q.answer0 = "A"
+                q.answer1 = "B"
+                q.answer2 = "C"
+                q.answer3 = "D"
+                q.rightAnswer = ""
+                self.mainWin.set_image(question_overview(q,font_question=150))
+                sleep(5)
                 self.curQuestion = 0
                 self.clear_player_answers()
                 self.quizAnswers = []
