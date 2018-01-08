@@ -1,4 +1,4 @@
-import csv
+import xlsxwriter
 import datetime
 
 from time import sleep
@@ -139,33 +139,32 @@ class Main():
         self.blockController = False
 
     def dump_csv(self):
-        with open(str(datetime.datetime.now()) + '.csv', 'w', newline='') as csvfile:
-            csvwriter = csv.writer(csvfile, delimiter=self.csvDelimiter,
-                                    quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        workbook = xlsxwriter.Workbook(str(datetime.datetime.now()) + ".xlsx")
+        ws = workbook.add_worksheet()
 
-            # Write top row
-            firstRow = ["Questions", "A", "B", "C", "D", "N/A", "Correct Answer"]
-            csvwriter.writerow(firstRow)
+        # Write top row
+        firstRow = ["Questions", "A", "B", "C", "D", "N/A", "Correct Answer"]
 
-            # Write every question
-            for i, answers in enumerate(self.quizAnswers):
-                row = [str(i + 1) + ".) " + self.questions[i].question]
-                counts = [0 for x in range(5)]
+        ws.write_row(0, 0, firstRow)
 
-                for answer in answers:
-                    num = self.answer_char_to_num(answer)
+        # Write every question
+        for i, answers in enumerate(self.quizAnswers):
+            ws.write(i + 1, 0, str(i + 1) + ".) " + self.questions[i].question)
 
-                    if num == None:
-                        counts[4] += 1
-                    else:
-                        counts[num] += 1
+            # Calculate counts
+            counts = [0 for x in range(5)]
 
-                for count in counts:
-                    row.append(count)
+            for answer in answers:
+                num = self.answer_char_to_num(answer)
 
-                row.append(self.answer_num_to_char(self.questions[i].rightAnswer))
+                if num == None:
+                    counts[4] += 1
+                else:
+                    counts[num] += 1
 
-                csvwriter.writerow(row)
+            ws.write_row(i + 1, 1, counts)
+
+            ws.write(i + 1, 6, self.answer_num_to_char(self.questions[i].rightAnswer))
 
     def answer_char_to_num(self, char):
         if char != None:
