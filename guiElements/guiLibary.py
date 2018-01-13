@@ -18,13 +18,13 @@ def text_objects(text, font, color=BLACK):
 def text_list(names, selected = None):
     temp_display = MainWindows.get_new_background('images/winner.png')
     for i, name in enumerate(names):
-        spalte = i % 5
-        zeile = i / 5
+        spalte = i % 4
+        zeile = i / 4
         print(str(spalte) + " " + str(zeile))
         if i == selected:
-            text_box("[" + name + "]", (spalte * 300) + 100, (int(zeile) * 50) + 200, 100, 100, temp_display
-                     , font_size=50, color=(200, 200, 200)) #old 100
+            text_box("[" + name + "]", (spalte * 440) + 100, (int(zeile) * 100) + 200, 100, 100, temp_display
+                     , font_size=75, color=(200, 200, 200)) #old 100
         else:
-            text_box(name, (spalte * 300) + 100, (int(zeile) * 50) + 200, 100, 100, temp_display, font_size=25) #old 50
+            text_box(name, (spalte * 435) + 100, (int(zeile) * 100) + 200, 100, 100, temp_display, font_size=60) #old 50
 
     return temp_display
