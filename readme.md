@@ -4,5 +4,6 @@ Unser Projekt versucht auf spielerische Weise den Unterricht im Sinne der Schül
 
 ## Links
 
-[BuzzedClassroomEditor]https://gitlab.com/BuzznSchool/BuzznSchoolEditor
-[BuzzedClassroomController]https://gitlab.com/BuzznSchool/BuzznSchoolController
+[BuzzedClassroomEditor](https://gitlab.com/BuzznSchool/BuzznSchoolEditor)
+
+[BuzzedClassroomController](https://gitlab.com/BuzznSchool/BuzznSchoolController)
