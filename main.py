@@ -8,7 +8,6 @@ from guiElements.question_overview import question_overview, Quiz
 from guiElements.quizzes_overview import quizzes_overview
 from guiElements.player_overview import player_overview
 from guiElements.main_window import MainWindows
-from Controller.controller import key_mapping as keys
 from Controller.controller import subscribe
 from Controller.controller import unsubscribe
 from Controller.controller import main as start_controller
@@ -46,20 +45,20 @@ class Main():
         start_controller()
 
     def handle_get_admin(self, buttonPressed, deviceId):
-        if keys[buttonPressed] == "A":
+        if buttonPressed == "A":
             self.adminId = deviceId
             unsubscribe(self.handle_get_admin)
             subscribe(self.handle_quizzes_overview)
 
     def handle_quizzes_overview(self, buttonPressed, deviceId):
         if deviceId == self.adminId:
-            if keys[buttonPressed] == "C":  # Up
+            if buttonPressed == "C":  # Up
                 if self.currentQuiz == 0:
                     self.currentQuiz = len(self.allQuizzes) - 1
                 else:
                     self.currentQuiz -= 1
 
-            elif keys[buttonPressed] == "D":    # Down
+            elif buttonPressed == "D":    # Down
                 if self.currentQuiz == len(self.allQuizzes) - 1:
                     self.currentQuiz = 0
                 else:
@@ -67,7 +66,7 @@ class Main():
 
             self.mainWin.set_image(quizzes_overview(self.allQuizzes, self.currentQuiz))
 
-            if keys[buttonPressed] == "A":      # Run Quiz
+            if buttonPressed == "A":      # Run Quiz
                 if len(self.allQuizzes) - 1 != 0:
                     self.blockController = False
                     self.players = []
@@ -76,14 +75,14 @@ class Main():
                     unsubscribe(self.handle_quizzes_overview)
                     subscribe(self.handle_player_overview)
 
-            elif keys[buttonPressed] == "B":
+            elif buttonPressed == "B":
                 pass
                 # Exit?
 
 
     def handle_player_overview(self, buttonPressed, deviceId):
         if deviceId == self.adminId:
-            if keys[buttonPressed] == "A":      # Start Quiz
+            if buttonPressed == "A":      # Start Quiz
                 self.show_quiz_preview()
 
                 self.questions = self.jdb.getQuiz(self.allQuizzes[self.currentQuiz])
@@ -97,7 +96,7 @@ class Main():
                 unsubscribe(self.handle_player_overview)
                 subscribe(self.handle_question_overview)
 
-            elif keys[buttonPressed] == "B":    # Back to Quizzes Overview
+            elif buttonPressed == "B":    # Back to Quizzes Overview
                 self.mainWin.set_image(quizzes_overview(self.allQuizzes, self.currentQuiz))
                 unsubscribe(self.handle_player_overview)
                 subscribe(self.handle_quizzes_overview)
@@ -109,7 +108,7 @@ class Main():
 
     def handle_question_overview(self, buttonPressed, deviceId):
         if deviceId == self.adminId:
-            if keys[buttonPressed] == "B":  # Back to Player Overview
+            if buttonPressed == "B":  # Back to Player Overview
                 self.blockController = False
                 self.mainWin.set_image(player_overview(self.players))
                 unsubscribe(self.handle_question_overview)
@@ -118,7 +117,7 @@ class Main():
 
         elif deviceId in self.playerIds and self.blockController == False:
             if self.playerAnswers[self.playerIds.index(deviceId)] == None:      # Set to chosen answer
-                self.playerAnswers[self.playerIds.index(deviceId)] = keys[buttonPressed]
+                self.playerAnswers[self.playerIds.index(deviceId)] = buttonPressed
 
         if self.has_everyone_answered():
             self.next_question()
@@ -175,7 +174,7 @@ class Main():
         # Set line length
         ws.set_column('A:A', 40)
         ws.set_column('B:F', 3)
-        ws.set_column('H:H', 11)
+        ws.set_column('H:H', 13)
         ws.set_column('I:L', 30)
 
         # Write every question
