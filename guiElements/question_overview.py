@@ -33,7 +33,7 @@ def question_overview(question, questionIndex ="", maxQuestions ="", selected ="
 
     temp_display = MainWindows.get_new_background('images/background'+str(selected)+str(swin)+'.png')
     if questionIndex != "" and maxQuestions != "":
-        text_box(str(questionIndex) + "/" + str(maxQuestions), 300 - 50, 30, 100, 100, temp_display, font_size=100)
+        text_box(str(questionIndex) + "/" + str(maxQuestions), 800-50, 25, 100, 100, temp_display, font_size=100)
     font = 50
     if(len(question.answer0) > 50):
         font = 50
