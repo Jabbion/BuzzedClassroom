@@ -1,9 +1,10 @@
 from evdev import InputDevice, list_devices, categorize, ecodes
 from selectors import DefaultSelector, EVENT_READ
 from threading import Thread
-from mapping import *
+from Controller.mapping import *
 
 subscriber = []
+block = []
 
 def in_key_mapping(key:int, key_map):
     for i in key_map.keys():
@@ -27,12 +28,11 @@ def main():
             device = key.fileobj
             key_map = get_key_mapping(device.name)
             for event in device.read():
-                if event.type == ecodes.EV_KEY and key_map != None:
+                if event.type == ecodes.EV_KEY and key_map != None and key.fd not in block:
                     cat = categorize(event)
-                    print("[!]event"+str(event.code))
                     if cat.keystate == 1 and in_key_mapping(event.code, key_map):
                         for m in subscriber:
-                            print("Event geschmissen")
+                            print("Event [" + key_map[event.code]+"]"+str(event.code))
                             Thread(target=m, args=(key_map[event.code], key.fd)).start()
 
 def get_key_mapping(name):
@@ -47,9 +47,11 @@ def subscribe(method):
     global subscriber
     subscriber.append(method)
 
+def set_block(block_list = []):
+    global block
+    block = block_list
 
 def unsubscribe(method):
     global subscriber
     subscriber.remove(method)
 
-main()

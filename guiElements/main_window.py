@@ -61,4 +61,7 @@ class MainWindows():
     def send(self, string):
         self.sock.send(string.encode("utf-8"))
 
+    def quit():
+        pygame.quit()
+        sys.exit()
 

@@ -1,5 +1,7 @@
 import xlsxwriter
 import datetime
+import os
+
 
 from time import sleep
 
@@ -11,6 +13,7 @@ from guiElements.main_window import MainWindows
 from Controller.controller import subscribe
 from Controller.controller import unsubscribe
 from Controller.controller import main as start_controller
+from Controller.controller import set_block as blockIds
 from timerThread import TimerThread
 
 class Main():
@@ -19,6 +22,7 @@ class Main():
     timePerQuestion = 10
     timeShowRightAnswer = 2
     timeQuizPreview = 5
+    xlsxFolder = "GespielteQuiz"
     # </Settings>
 
     currentQuiz = 0
@@ -33,10 +37,10 @@ class Main():
         self.quizPreviewQuestion.answer1 = "B"
         self.quizPreviewQuestion.answer2 = "C"
         self.quizPreviewQuestion.answer3 = "D"
-        self.quizPreviewQuestion.rightAnswer = 88
+        self.quizPreviewQuestion.rightAnswer = 42
 
         # Quiz Overview
-        self.mainWin = MainWindows(1280, 1024)
+        self.mainWin = MainWindows(800, 400)
         self.allQuizzes = self.jdb.getQuizNames()
         self.mainWin.set_image(quizzes_overview(self.allQuizzes, self.currentQuiz))
 
@@ -68,7 +72,7 @@ class Main():
 
             if buttonPressed == "A":      # Run Quiz
                 if len(self.allQuizzes) - 1 != 0:
-                    self.blockController = False
+                    blockIds()
                     self.players = []
                     self.playerIds = []
                     self.mainWin.set_image(player_overview(self.players))
@@ -76,9 +80,7 @@ class Main():
                     subscribe(self.handle_player_overview)
 
             elif buttonPressed == "B":
-                pass
-                # Exit?
-
+                self.mainWin.quit()
 
     def handle_player_overview(self, buttonPressed, deviceId):
         if deviceId == self.adminId:
@@ -91,7 +93,7 @@ class Main():
                 self.quizAnswers = []
                 self.timerThread = TimerThread()
                 self.timerThread.run(self.timePerQuestion, onEnd=self.next_question)
-                self.blockController = False
+                blockIds()
                 self.mainWin.set_image(question_overview(self.questions[self.curQuestion], self.curQuestion + 1, len(self.questions)))
                 unsubscribe(self.handle_player_overview)
                 subscribe(self.handle_question_overview)
@@ -101,7 +103,7 @@ class Main():
                 unsubscribe(self.handle_player_overview)
                 subscribe(self.handle_quizzes_overview)
 
-        elif not deviceId in self.playerIds and self.blockController == False:    # Add to players
+        elif not deviceId in self.playerIds:    # Add to players
             self.players.append("Player " + str(len(self.players) + 1))
             self.playerIds.append(deviceId)
             self.mainWin.set_image(player_overview(self.players))
@@ -109,13 +111,13 @@ class Main():
     def handle_question_overview(self, buttonPressed, deviceId):
         if deviceId == self.adminId:
             if buttonPressed == "B":  # Back to Player Overview
-                self.blockController = False
+                blockIds()
                 self.mainWin.set_image(player_overview(self.players))
                 unsubscribe(self.handle_question_overview)
                 subscribe(self.handle_player_overview)
                 return
 
-        elif deviceId in self.playerIds and self.blockController == False:
+        elif deviceId in self.playerIds:
             if self.playerAnswers[self.playerIds.index(deviceId)] == None:      # Set to chosen answer
                 self.playerAnswers[self.playerIds.index(deviceId)] = buttonPressed
 
@@ -123,14 +125,14 @@ class Main():
             self.next_question()
 
     def show_quiz_preview(self):
-        self.blockController = True
+        blockIds(self.playerIds + [self.adminId])
         self.quizPreviewQuestion.question = self.allQuizzes[self.currentQuiz]
         self.mainWin.set_image(question_overview(self.quizPreviewQuestion, font_question=150))
         sleep(self.timeQuizPreview)
-        self.blockController = False
+        blockIds()
 
     def next_question(self):
-        self.blockController = True
+        blockIds(self.playerIds + [self.adminId])
         self.timerThread.enable(False)
 
         self.quizAnswers.append(self.playerAnswers[:])
@@ -155,10 +157,14 @@ class Main():
             unsubscribe(self.handle_question_overview)
             subscribe(self.handle_quizzes_overview)
 
-        self.blockController = False
+        blockIds()
 
     def dump_csv(self):
-        workbook = xlsxwriter.Workbook(str(datetime.datetime.now()) + ".xlsx")
+        if not os.path.exists(self.xlsxFolder):
+            os.makedirs(self.xlsxFolder)
+        path = self.xlsxFolder + "/" + str(datetime.datetime.now()) + ".xlsx"
+        workbook = xlsxwriter.Workbook(path)
+        os.system("chmod 666 " + "'" + path + "'")
         ws = workbook.add_worksheet()
 
         bold = workbook.add_format({'bold': True})
@@ -206,7 +212,7 @@ class Main():
             ws.write(i + 1, 9, self.questions[i].answer1)
             ws.write(i + 1, 10, self.questions[i].answer2)
             ws.write(i + 1, 11, self.questions[i].answer3)
-
+        workbook.close()
     def answer_char_to_num(self, char):
         if char != None:
             return ord(char) - 65

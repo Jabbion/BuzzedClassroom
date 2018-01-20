@@ -21,10 +21,6 @@ class Quiz:
 
 def question_overview(question, questionIndex ="", maxQuestions ="", selected ="", win ="", font_question = 50):
     # hier kann böser Exploit sein!                                         ----------
-    if(selected == "3"):
-        selected = "2"
-    elif selected == "2":
-        selected = "3"
     swin = ""
     if win == True:
         swin = "g"
