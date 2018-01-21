@@ -1,7 +1,6 @@
 import pygame
 import sys
 from pygame.locals import *
-import socket
 from threading import Thread
 import signal
 import os
@@ -41,15 +40,6 @@ class MainWindows():
         new_image = pygame.transform.scale(image, (self.width, self.height))
         self.gameDisplay.blit(new_image, (0, 0))
 
-        """
-        for x in range(self.width):
-            for y in range(self.height):
-                pix = new_image.get_at((x,y))
-                print(pix)
-                #self.pixel(x,y,pix[0], pix[1], pix[2])
-        """
-
-
     def pixel(self, x, y, r, g, b, a=255):
         if a == 255:
             self.send('PX %d %d %02x%02x%02x\n' % (x, y, r, g, b))
@@ -69,7 +59,21 @@ class MainWindows():
             pygame.display.update()
             e = pygame.event.get()
             for event in e:
+
+                # Exit programm
                 if event.type == QUIT:
-                    os.kill(os.getpid(), signal.SIGUSR1)
-                    pygame.quit()
-                    sys.exit()
+                    self.quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.quit()
+
+                    # Tss... Don't tell the FluffelFeli ;)
+                    if event.key ==pygame.K_f:
+                        curWin = pygame.display.get_surface()
+                        xMax, yMax = curWin.get_size()
+
+                        small_text = pygame.font.SysFont("LikhanNormal", 130)
+                        text_surface = small_text.render("DON'T UPSET THE FLUFFELFELI! :'(", True, (0, 0, 0))
+                        text_rect = text_surface.get_rect()
+                        text_rect.center = ((xMax / 2), (yMax / 2))
+                        curWin.blit(text_surface, text_rect)

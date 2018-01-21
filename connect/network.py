@@ -27,7 +27,6 @@ class Network(object):
 
     def execute_from_json(self, response):
         img = None
-        print(response)
         if response["windowName"] == "QuizzesOverview":
             img = quizzes_overview(response["quizzes"], response["selectedQuiz"])
         if response["windowName"] == "PlayerOverview":

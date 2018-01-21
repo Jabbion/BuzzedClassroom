@@ -1,4 +1,5 @@
 import xlsxwriter
+import argparse
 import datetime
 import os
 
@@ -22,12 +23,31 @@ class Main():
     timePerQuestion = 10
     timeShowRightAnswer = 2
     timeQuizPreview = 5
-    xlsxFolder = "Gespielte Quiz"
+    defXlsxFolder = "Gespielte Quiz"
+    defWinWidth = 1600
+    defWinHeight = 900
     # </Settings>
 
     currentQuiz = 0
 
     def __init__(self):
+        # Parse args
+        parser = argparse.ArgumentParser()
+        parser.add_argument("-f", "--fullscreen", help="Run window in fullscreen mode", action="store_true")
+        parser.add_argument("-r", "--resolution", help="Set screen resolution (e.g. '1600x900')", type=str)
+        parser.add_argument("-d", "--directory", help="Set output directory for xlsx files", type=str, default=self.defXlsxFolder)
+
+        self.args = parser.parse_args()
+
+        if self.args.resolution != None:
+            try:
+                resArr = self.args.resolution.split('x')
+                self.defWinWidth = int(resArr[0])
+                self.defWinHeight = int(resArr[1])
+            except:
+                print("[!] Please specify a correct resolution (e.g. '1600x900')")
+                exit(1)
+
         self.jdb = database()
 
         # Prepare Quiz Preview
@@ -40,7 +60,7 @@ class Main():
         self.quizPreviewQuestion.rightAnswer = 42
 
         # Quiz Overview
-        self.mainWin = MainWindows(800, 400, fullscreen = True)
+        self.mainWin = MainWindows(self.defWinWidth, self.defWinHeight, fullscreen=self.args.fullscreen)
         self.allQuizzes = self.jdb.getQuizNames()
         self.mainWin.set_image(quizzes_overview(self.allQuizzes, self.currentQuiz))
 
@@ -160,9 +180,9 @@ class Main():
         blockIds()
 
     def dump_csv(self):
-        if not os.path.exists(self.xlsxFolder):
-            os.makedirs(self.xlsxFolder)
-        path = self.xlsxFolder + "/" + str(datetime.datetime.now()) + ".xlsx"
+        if not os.path.exists():
+            os.makedirs(self.args.directory)
+        path = self.args.directory + "/" + str(datetime.datetime.now()) + ".xlsx"
         workbook = xlsxwriter.Workbook(path)
         ws = workbook.add_worksheet()
 
