@@ -22,7 +22,7 @@ class Main():
     timePerQuestion = 10
     timeShowRightAnswer = 2
     timeQuizPreview = 5
-    xlsxFolder = "GespielteQuiz"
+    xlsxFolder = "Gespielte Quiz"
     # </Settings>
 
     currentQuiz = 0
@@ -40,7 +40,7 @@ class Main():
         self.quizPreviewQuestion.rightAnswer = 42
 
         # Quiz Overview
-        self.mainWin = MainWindows(800, 400)
+        self.mainWin = MainWindows(800, 400, fullscreen = True)
         self.allQuizzes = self.jdb.getQuizNames()
         self.mainWin.set_image(quizzes_overview(self.allQuizzes, self.currentQuiz))
 
@@ -164,7 +164,6 @@ class Main():
             os.makedirs(self.xlsxFolder)
         path = self.xlsxFolder + "/" + str(datetime.datetime.now()) + ".xlsx"
         workbook = xlsxwriter.Workbook(path)
-        os.system("chmod 666 " + "'" + path + "'")
         ws = workbook.add_worksheet()
 
         bold = workbook.add_format({'bold': True})

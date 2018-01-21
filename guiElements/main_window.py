@@ -2,6 +2,9 @@ import pygame
 import sys
 from pygame.locals import *
 import socket
+from threading import Thread
+import signal
+import os
 
 class MainWindows():
 
@@ -26,6 +29,7 @@ class MainWindows():
             self.gameDisplay = pygame.display.set_mode((width, height))
             self.width = width
             self.height = height
+        Thread(target=self.main_loop, args=()).start()
 
     @staticmethod
     def get_new_background(path):
@@ -36,7 +40,6 @@ class MainWindows():
     def set_image(self, image):
         new_image = pygame.transform.scale(image, (self.width, self.height))
         self.gameDisplay.blit(new_image, (0, 0))
-        pygame.display.update()
 
         """
         for x in range(self.width):
@@ -46,11 +49,6 @@ class MainWindows():
                 #self.pixel(x,y,pix[0], pix[1], pix[2])
         """
 
-        e = pygame.event.get()
-        for event in e:
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
 
     def pixel(self, x, y, r, g, b, a=255):
         if a == 255:
@@ -61,7 +59,17 @@ class MainWindows():
     def send(self, string):
         self.sock.send(string.encode("utf-8"))
 
-    def quit():
+    def quit(self):
+        os.kill(os.getpid(), signal.SIGUSR1)
         pygame.quit()
         sys.exit()
 
+    def main_loop(self):
+        while True:
+            pygame.display.update()
+            e = pygame.event.get()
+            for event in e:
+                if event.type == QUIT:
+                    os.kill(os.getpid(), signal.SIGUSR1)
+                    pygame.quit()
+                    sys.exit()
